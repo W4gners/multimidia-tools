@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
 interface DragDropContextType {
   isDragging: boolean;
@@ -23,45 +23,57 @@ interface DragDropProviderProps {
 export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps) {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
-  };
+  }, []);
 
-  const handleDragLeave = (e: React.DragEvent) => {
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
-  };
+  }, []);
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setIsDragging(false);
+    e.stopPropagation();
+  }, []);
 
-    const file = e.dataTransfer.files[0];
-    if (!file || (!file.name.endsWith('.srt') && !file.name.endsWith('.vtt'))) {
-      return;
-    }
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
 
-    const text = await file.text();
-    onFileDrop(text);
-  };
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        onFileDrop(content);
+      };
+      reader.readAsText(file);
+    },
+    [onFileDrop]
+  );
 
   return (
     <DragDropContext.Provider value={{ isDragging, setIsDragging }}>
       <div
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className="min-h-screen"
       >
         {isDragging && (
-          <div className="fixed inset-0 bg-blue-500 bg-opacity-10 pointer-events-none z-50 border-2 border-blue-500 border-dashed">
-            <div className="flex items-center justify-center h-full">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-                <p className="text-xl font-semibold text-blue-600 dark:text-blue-400">
-                  Solte seu arquivo aqui
-                </p>
-              </div>
+          <div className="fixed inset-0 bg-black/50 z-50">
+            <div className="absolute inset-6 rounded-3xl border-2 border-[#fc7320] border-dashed flex items-center justify-center">
+              <p className="text-[#fc7320] text-xl font-medium">
+                Solte o arquivo aqui
+              </p>
             </div>
           </div>
         )}
