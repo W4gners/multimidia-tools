@@ -45,12 +45,12 @@ export default function App() {
         {/* Navigation */}
         <nav className="mb-8">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleMudarModo('srtToVtt')}
-                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
                   modo === 'srtToVtt'
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -58,9 +58,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('addNumbering')}
-                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
                   modo === 'addNumbering'
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -68,9 +68,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('audioToVtt')}
-                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
                   modo === 'audioToVtt'
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -78,9 +78,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('videoToVtt')}
-                className={`px-6 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
                   modo === 'videoToVtt'
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
