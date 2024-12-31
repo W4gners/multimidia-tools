@@ -115,7 +115,7 @@ export default function App() {
             </div>
 
             {/* Results Area */}
-            {(conteudoEntrada || conteudoSaida) && (modo === 'srtToVtt' || modo === 'addNumbering') && (
+            {conteudoSaida && (modo === 'srtToVtt' || modo === 'addNumbering') && (
               <div className="bg-neutral-800 rounded-xl p-6">
                 <h3 className="text-lg font-bold mb-6 text-center">Resultado</h3>
                 <div className="space-y-6">
