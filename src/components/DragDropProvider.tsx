@@ -22,18 +22,23 @@ interface DragDropProviderProps {
 
 export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const [dragCounter, setDragCounter] = useState(0);
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setDragCounter(prev => prev + 1);
     setIsDragging(true);
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false);
-  }, []);
+    setDragCounter(prev => prev - 1);
+    if (dragCounter === 1) {
+      setIsDragging(false);
+    }
+  }, [dragCounter]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -45,6 +50,7 @@ export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(false);
+      setDragCounter(0);
 
       const file = e.dataTransfer.files[0];
       if (!file) return;
@@ -66,10 +72,10 @@ export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className="min-h-screen"
+        className="min-h-screen relative"
       >
         {isDragging && (
-          <div className="fixed inset-0 bg-black/50 z-50">
+          <div className="fixed inset-0 bg-black/70 z-50 pointer-events-none">
             <div className="absolute inset-6 rounded-3xl border-2 border-[#fc7320] border-dashed flex items-center justify-center">
               <p className="text-[#fc7320] text-xl font-medium">
                 Solte o arquivo aqui
