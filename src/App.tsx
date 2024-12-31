@@ -48,9 +48,9 @@ export default function App() {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => handleMudarModo('srtToVtt')}
-                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-base transition-colors ${
                   modo === 'srtToVtt'
-                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320] font-bold'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -58,9 +58,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('addNumbering')}
-                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-base transition-colors ${
                   modo === 'addNumbering'
-                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320] font-bold'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -68,9 +68,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('audioToVtt')}
-                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-base transition-colors ${
                   modo === 'audioToVtt'
-                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320] font-bold'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
@@ -78,9 +78,9 @@ export default function App() {
               </button>
               <button
                 onClick={() => handleMudarModo('videoToVtt')}
-                className={`w-[203px] h-[42px] rounded-xl text-sm font-medium transition-colors ${
+                className={`w-[203px] h-[42px] rounded-xl text-base transition-colors ${
                   modo === 'videoToVtt'
-                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320]'
+                    ? 'bg-[#fc7320]/30 border border-[#fc7320] text-[#fc7320] font-bold'
                     : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
                 }`}
               >
