@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface DragDropContextType {
   isDragging: boolean;
@@ -17,47 +17,37 @@ export function useDragDrop() {
 
 interface DragDropProviderProps {
   children: ReactNode;
-  onFileDrop: (content: string) => void;
+  onFileDrop: (file: File) => void;
 }
 
 export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps) {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
+  const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
-  }, []);
+  };
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
+  const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    // Só desativa se o mouse sair da janela
-    if (e.clientY <= 0 || e.clientY >= window.innerHeight || 
-        e.clientX <= 0 || e.clientX >= window.innerWidth) {
-      setIsDragging(false);
-    }
-  }, []);
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+    setIsDragging(false);
+  };
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-  }, []);
+  };
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
 
-      const file = e.dataTransfer.files[0];
-      if (!file) return;
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        onFileDrop(content);
-      };
-      reader.readAsText(file);
-    },
-    [onFileDrop]
-  );
+    onFileDrop(file);
+  };
 
   return (
     <DragDropContext.Provider value={{ isDragging, setIsDragging }}>

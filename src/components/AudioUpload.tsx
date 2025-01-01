@@ -10,14 +10,22 @@ export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const validateAndProcessFile = (file: File) => {
     if (!file.type.includes('audio')) {
-      alert('Por favor, selecione um arquivo de áudio válido.');
+      alert('Por favor, selecione um arquivo de áudio válido (MP3, WAV, M4A, etc).');
+      return;
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      alert('O arquivo deve ser menor que 25MB.');
       return;
     }
     onFileSelect(file);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    validateAndProcessFile(file);
   };
 
   const handleDragEnter = (e: React.DragEvent) => {
@@ -41,13 +49,7 @@ export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
 
     const file = e.dataTransfer.files[0];
     if (!file) return;
-    
-    if (!file.type.includes('audio')) {
-      alert('Por favor, selecione um arquivo de áudio válido.');
-      return;
-    }
-    
-    onFileSelect(file);
+    validateAndProcessFile(file);
   };
 
   const handleClick = () => {
@@ -85,7 +87,7 @@ export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
             ou arraste seu arquivo
           </p>
           <p className="mt-1 text-xs text-neutral-500">
-            Apenas arquivos de áudio
+            Arquivos de áudio até 25MB
           </p>
         </div>
         <input

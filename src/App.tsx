@@ -112,7 +112,20 @@ export default function App() {
                 <div className="text-center text-neutral-400">
                   {modo === 'audioToVtt' && (
                     <div className="w-full max-w-3xl mx-auto">
-                      <AudioToVtt />
+                      <DragDropProvider onFileDrop={(file) => {
+                        if (file instanceof File && file.type.includes('audio')) {
+                          // Referência ao componente AudioToVtt
+                          const audioToVtt = document.querySelector('input[type="file"][accept="audio/*"]');
+                          if (audioToVtt) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            (audioToVtt as HTMLInputElement).files = dataTransfer.files;
+                            audioToVtt.dispatchEvent(new Event('change', { bubbles: true }));
+                          }
+                        }
+                      }}>
+                        <AudioToVtt />
+                      </DragDropProvider>
                     </div>
                   )}
                   {modo === 'videoToVtt' && (
