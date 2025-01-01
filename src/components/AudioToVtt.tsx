@@ -3,6 +3,7 @@ import { AudioUpload } from './AudioUpload';
 import { ProgressBar } from './ProgressBar';
 import { Preview } from './Preview';
 import { ActionButtons } from './ActionButtons';
+import { API_CONFIG } from '../config/api';
 
 export function AudioToVtt() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -61,35 +62,40 @@ export function AudioToVtt() {
     try {
       setProgress(20);
       const formData = new FormData();
-      formData.append('audio', file);
+      formData.append('file', file);
+      formData.append('model', 'whisper-1');
+      formData.append('language', 'pt');
+      formData.append('response_format', 'text');
 
       setProgress(40);
-      const response = await fetch('http://localhost:3001/transcribe', {
+      const response = await fetch(API_CONFIG.WHISPER_API_ENDPOINT, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
+        },
         body: formData
       });
 
       setProgress(60);
-
+      
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Falha ao processar o áudio');
+        throw new Error(errorData.error?.message || 'Falha ao processar o áudio');
       }
 
       setProgress(80);
-      const data = await response.json();
-      const vttContent = formatVttContent(data.transcription);
+      const transcription = await response.text();
+      const vttContent = formatVttContent(transcription);
       
       setProgress(100);
       setResult(vttContent);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao processar o áudio:', error);
-      setError('Erro ao processar o áudio. Por favor, tente novamente.');
+      setError(error.message || 'Erro ao processar o áudio. Por favor, tente novamente.');
     } finally {
-      // Manter o progresso por um momento antes de resetar
       setTimeout(() => {
         setIsProcessing(false);
-        setProgress(0);
+        if (!error) setProgress(0);
       }, 1000);
     }
   };
