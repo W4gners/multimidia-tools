@@ -3,7 +3,7 @@ import { FileUpload } from './components/FileUpload';
 import { Preview } from './components/Preview';
 import { ActionButtons } from './components/ActionButtons';
 import { DragDropProvider } from './components/DragDropProvider';
-import { srtToVtt, addVttNumbering } from './utils/subtitleConverter';
+import { convertSrtToVtt, addNumbersToVtt, removeNumbersFromVtt } from './utils/subtitleConverter';
 import { LogoMultimidia } from './assets/logo_multimidia';
 import { AudioToVtt } from './components/AudioToVtt';
 
@@ -17,9 +17,9 @@ export default function App() {
   const handleSelecionarArquivo = (content: string) => {
     setConteudoEntrada(content);
     if (modo === 'srtToVtt') {
-      setConteudoSaida(srtToVtt(content));
+      setConteudoSaida(convertSrtToVtt(content));
     } else if (modo === 'addNumbering') {
-      setConteudoSaida(addVttNumbering(content));
+      setConteudoSaida(addNumbersToVtt(content));
     }
   };
 

@@ -38,16 +38,12 @@ export function AudioToVtt() {
     }
 
     let vttContent = 'WEBVTT\n\n';
-    for (let i = 0; i < lines.length; i += 2) {
-      const startTime = i * 2;
-      const endTime = startTime + 4;
+    for (let i = 0; i < lines.length; i++) {
+      const startTime = i * 3; // 3 segundos por linha
+      const endTime = startTime + 3;
       
       vttContent += `${formatVttTimestamp(startTime)} --> ${formatVttTimestamp(endTime)}\n`;
-      vttContent += lines[i] + '\n';
-      if (lines[i + 1]) {
-        vttContent += lines[i + 1] + '\n';
-      }
-      vttContent += '\n';
+      vttContent += lines[i] + '\n\n';
     }
     
     return vttContent;
@@ -64,15 +60,13 @@ export function AudioToVtt() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('model', 'whisper-1');
-      formData.append('language', 'pt');
       formData.append('response_format', 'text');
 
       setProgress(40);
-      const response = await fetch(API_CONFIG.WHISPER_API_ENDPOINT, {
+      const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`,
-          'Accept': 'application/json'
+          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
         },
         body: formData
       });
