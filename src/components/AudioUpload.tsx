@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload } from 'lucide-react';
 
 interface AudioUploadProps {
@@ -8,6 +8,7 @@ interface AudioUploadProps {
 
 export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -49,9 +50,16 @@ export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
     onFileSelect(file);
   };
 
+  const handleClick = () => {
+    if (!isProcessing && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="w-full">
       <div
+        onClick={handleClick}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -81,6 +89,7 @@ export function AudioUpload({ onFileSelect, isProcessing }: AudioUploadProps) {
           </p>
         </div>
         <input
+          ref={fileInputRef}
           type="file"
           accept="audio/*"
           className="hidden"

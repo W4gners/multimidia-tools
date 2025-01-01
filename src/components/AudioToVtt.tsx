@@ -8,6 +8,7 @@ export function AudioToVtt() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState('');
+  const [error, setError] = useState('');
 
   const formatVttTimestamp = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
@@ -37,8 +38,8 @@ export function AudioToVtt() {
 
     let vttContent = 'WEBVTT\n\n';
     for (let i = 0; i < lines.length; i += 2) {
-      const startTime = i * 2; // 2 seconds per line
-      const endTime = startTime + 4; // 4 seconds duration for each block
+      const startTime = i * 2;
+      const endTime = startTime + 4;
       
       vttContent += `${formatVttTimestamp(startTime)} --> ${formatVttTimestamp(endTime)}\n`;
       vttContent += lines[i] + '\n';
@@ -53,43 +54,39 @@ export function AudioToVtt() {
 
   const processAudio = async (file: File) => {
     setIsProcessing(true);
-    setProgress(10);
+    setProgress(0);
     setResult('');
+    setError('');
 
     try {
-      // Simular progresso de upload
-      setProgress(30);
-      
+      setProgress(20);
       const formData = new FormData();
       formData.append('audio', file);
 
+      setProgress(40);
       const response = await fetch('http://localhost:3001/transcribe', {
         method: 'POST',
         body: formData
       });
 
-      // Simular progresso de processamento
       setProgress(60);
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Falha ao processar o áudio');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Falha ao processar o áudio');
       }
 
       setProgress(80);
-
       const data = await response.json();
-      const transcription = data.transcription;
+      const vttContent = formatVttContent(data.transcription);
       
-      // Processar e formatar o VTT
-      setProgress(90);
-      const vttContent = formatVttContent(transcription);
-      setResult(vttContent);
       setProgress(100);
+      setResult(vttContent);
     } catch (error) {
       console.error('Erro ao processar o áudio:', error);
-      alert('Erro ao processar o áudio. Por favor, tente novamente.');
+      setError('Erro ao processar o áudio. Por favor, tente novamente.');
     } finally {
+      // Manter o progresso por um momento antes de resetar
       setTimeout(() => {
         setIsProcessing(false);
         setProgress(0);
@@ -101,11 +98,12 @@ export function AudioToVtt() {
     setResult('');
     setIsProcessing(false);
     setProgress(0);
+    setError('');
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-6">
-      {!result && (
+    <div className="w-full space-y-6">
+      {!result && !error && (
         <AudioUpload
           onFileSelect={processAudio}
           isProcessing={isProcessing}
@@ -115,6 +113,18 @@ export function AudioToVtt() {
       {isProcessing && (
         <div className="mt-6">
           <ProgressBar progress={progress} />
+        </div>
+      )}
+
+      {error && (
+        <div className="p-4 bg-red-500/10 border border-red-500 rounded-lg">
+          <p className="text-red-500 text-center">{error}</p>
+          <button
+            onClick={handleReset}
+            className="mt-4 px-4 py-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 transition-colors mx-auto block"
+          >
+            Tentar Novamente
+          </button>
         </div>
       )}
 

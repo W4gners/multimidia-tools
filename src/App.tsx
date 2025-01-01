@@ -111,7 +111,9 @@ export default function App() {
               {(modo === 'audioToVtt' || modo === 'videoToVtt') && (
                 <div className="text-center text-neutral-400">
                   {modo === 'audioToVtt' && (
-                    <AudioToVtt />
+                    <div className="w-full max-w-3xl mx-auto">
+                      <AudioToVtt />
+                    </div>
                   )}
                   {modo === 'videoToVtt' && (
                     <p>Funcionalidade em desenvolvimento</p>
