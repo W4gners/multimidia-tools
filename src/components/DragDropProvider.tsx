@@ -30,8 +30,9 @@ export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
-    setIsDragging(false);
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsDragging(false);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -59,7 +60,7 @@ export function DragDropProvider({ children, onFileDrop }: DragDropProviderProps
         className="min-h-screen relative"
       >
         {isDragging && (
-          <div className="fixed inset-0 bg-black/70 z-50">
+          <div className="fixed inset-0 bg-black/70 z-50 pointer-events-none">
             <div className="absolute inset-6 rounded-3xl border-2 border-[#fc7320] border-dashed flex items-center justify-center">
               <p className="text-[#fc7320] text-xl font-medium">
                 Solte o arquivo aqui

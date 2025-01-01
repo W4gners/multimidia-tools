@@ -71,7 +71,8 @@ export function AudioToVtt() {
       const response = await fetch(API_CONFIG.WHISPER_API_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
+          'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`,
+          'Accept': 'application/json'
         },
         body: formData
       });
@@ -80,7 +81,13 @@ export function AudioToVtt() {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Falha ao processar o áudio');
+        if (errorData.error?.message) {
+          throw new Error(errorData.error.message);
+        } else if (response.status === 401) {
+          throw new Error('Chave da API inválida. Por favor, verifique sua chave da OpenAI.');
+        } else {
+          throw new Error('Erro ao processar o áudio. Por favor, tente novamente.');
+        }
       }
 
       setProgress(80);
