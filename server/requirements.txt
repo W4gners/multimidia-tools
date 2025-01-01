@@ -1,0 +1,4 @@
+flask==2.0.1
+flask-cors==3.0.10
+openai-whisper==20231117
+torch==2.1.0

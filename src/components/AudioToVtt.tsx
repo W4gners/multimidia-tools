@@ -53,10 +53,13 @@ export function AudioToVtt() {
 
   const processAudio = async (file: File) => {
     setIsProcessing(true);
-    setProgress(0);
+    setProgress(10);
     setResult('');
 
     try {
+      // Simular progresso de upload
+      setProgress(30);
+      
       const formData = new FormData();
       formData.append('audio', file);
 
@@ -65,20 +68,32 @@ export function AudioToVtt() {
         body: formData
       });
 
+      // Simular progresso de processamento
+      setProgress(60);
+
       if (!response.ok) {
-        throw new Error('Failed to process audio');
+        const error = await response.json();
+        throw new Error(error.error || 'Falha ao processar o áudio');
       }
+
+      setProgress(80);
 
       const data = await response.json();
       const transcription = data.transcription;
+      
+      // Processar e formatar o VTT
+      setProgress(90);
       const vttContent = formatVttContent(transcription);
       setResult(vttContent);
+      setProgress(100);
     } catch (error) {
       console.error('Erro ao processar o áudio:', error);
-      // TODO: Adicionar tratamento de erro adequado
+      alert('Erro ao processar o áudio. Por favor, tente novamente.');
     } finally {
-      setIsProcessing(false);
-      setProgress(100);
+      setTimeout(() => {
+        setIsProcessing(false);
+        setProgress(0);
+      }, 1000);
     }
   };
 
