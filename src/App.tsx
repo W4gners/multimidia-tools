@@ -5,6 +5,7 @@ import { ActionButtons } from './components/ActionButtons';
 import { DragDropProvider } from './components/DragDropProvider';
 import { srtToVtt, addVttNumbering } from './utils/subtitleConverter';
 import { LogoMultimidia } from './assets/logo_multimidia';
+import { AudioToVtt } from './components/AudioToVtt';
 
 type ConversionMode = 'srtToVtt' | 'addNumbering' | 'audioToVtt' | 'videoToVtt';
 
@@ -109,7 +110,12 @@ export default function App() {
               )}
               {(modo === 'audioToVtt' || modo === 'videoToVtt') && (
                 <div className="text-center text-neutral-400">
-                  <p>Funcionalidade em desenvolvimento</p>
+                  {modo === 'audioToVtt' && (
+                    <AudioToVtt />
+                  )}
+                  {modo === 'videoToVtt' && (
+                    <p>Funcionalidade em desenvolvimento</p>
+                  )}
                 </div>
               )}
             </div>
